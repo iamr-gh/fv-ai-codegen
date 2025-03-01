@@ -3,6 +3,7 @@ import typing
 import random
 
 # this needs to be generalize, can create a type distribution interface
+# called a gen strategy in some other codegen
 
 
 def gen_input(val_type: type):
@@ -41,4 +42,8 @@ def fuzz(f):
     hints = get_type_hints(f)
     test_inputs = gen_args(hints, 1000)
     for x in test_inputs:
-        f(**x)
+        try:
+            f(**x)
+        except Exception as e:
+            print("Failed with inputs:", x)
+            raise e

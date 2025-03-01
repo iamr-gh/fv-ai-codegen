@@ -15,7 +15,7 @@ def sort_func(x: list[int]) -> list[int]:
     change = True
     while (change):
         change = False
-        for i in range(len(x) - 1):
+        for i in range(len(x) - 2):
             if x[i] > x[i + 1]:
                 x[i], x[i + 1] = x[i + 1], x[i]
                 change = True
@@ -29,6 +29,7 @@ def main():
     # print(square(2))
     # print("Hello from fv-ai-codegen!")
     fuzz.fuzz(sort_func)
+    # _ = deal.cases(sort_func) can't figure out how to do this
 
 
 if __name__ == "__main__":

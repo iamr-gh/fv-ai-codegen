@@ -7,5 +7,7 @@ requires-python = ">=3.13"
 dependencies = [
     "deal>=4.24.4",
     "deal-solver>=0.1.2",
+    "hypothesis>=6.127.3",
     "numpy>=2.2.3",
+    "pytest>=8.3.4",
 ]
