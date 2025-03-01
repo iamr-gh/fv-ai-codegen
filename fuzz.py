@@ -6,10 +6,9 @@ import random
 
 
 def gen_input(val_type: type):
-    # use get typing.get_origin for nested types
-
     wrapper_type = typing.get_origin(val_type)
-    if wrapper_type is list:
+
+    if wrapper_type is list:  # dict and other types exist
         length = random.randint(0, 10)
         inner_type = typing.get_args(val_type)[0]
         lst = []
@@ -17,13 +16,11 @@ def gen_input(val_type: type):
             lst.append(gen_input(inner_type))
         return lst
 
-    # dict and other types exist
-
     if val_type is int:
         return random.randint(-1000, 1000)
 
     if val_type is str:
-        return ""
+        return ""  # todo
 
     return None
 
@@ -40,12 +37,8 @@ def gen_args(arg_types: dict, n: int) -> list[dict]:
     return out
 
 
-# take a function, go through all its inputs, and randomly sample parts of the input space
 def fuzz(f):
     hints = get_type_hints(f)
-
-    # see if it breaks it
-    test_inputs = gen_args(hints, 100)
-    # print(test_inputs)
+    test_inputs = gen_args(hints, 1000)
     for x in test_inputs:
         f(**x)
