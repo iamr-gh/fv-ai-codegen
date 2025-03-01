@@ -6,5 +6,6 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "deal>=4.24.4",
+    "deal-solver>=0.1.2",
     "numpy>=2.2.3",
 ]
