@@ -39,10 +39,13 @@ def main():
     # resp = queryModel("What was the previous message?")
     # print(resp)
 
-    ai = ai_integration.OllamaThread()
+    ai_1 = ai_integration.OllamaThread()
+    ai_2 = ai_integration.OllamaThread()
     while (True):
-        txt = input(">>> ")
-        print(ai.query(txt, 100))
+        txt = input("1:>>> ")
+        print(ai_1.query(txt, 100))
+        txt = input("2:>>> ")
+        print(ai_2.query(txt, 100))
 
 
 if __name__ == "__main__":
