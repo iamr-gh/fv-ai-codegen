@@ -1,5 +1,7 @@
 import deal
 import fuzz
+import ollama
+import ai_integration
 
 
 @deal.post(lambda x: x >= 0)
@@ -21,15 +23,26 @@ def sort_func(x: list[int]) -> list[int]:
                 change = True
     return x
 
-# ok to use this library, probably want to fuzz test inputs in their type range
+
+def queryModel(msg: str) -> str:
+    return ollama.chat(model="llama3.1", messages=[{'role': 'user', 'content': msg}])
 
 
 def main():
     # print(sort_func([1, 3, 2]))
     # print(square(2))
     # print("Hello from fv-ai-codegen!")
-    fuzz.fuzz(sort_func)
+    # fuzz.fuzz(sort_func)
     # _ = deal.cases(sort_func) can't figure out how to do this
+    # resp = queryModel("Why is the sky blue?")
+    # print(resp)
+    # resp = queryModel("What was the previous message?")
+    # print(resp)
+
+    ai = ai_integration.OllamaThread()
+    while (True):
+        txt = input(">>> ")
+        print(ai.query(txt, 100))
 
 
 if __name__ == "__main__":
