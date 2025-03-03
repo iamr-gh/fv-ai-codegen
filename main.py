@@ -1,7 +1,7 @@
 import deal
 import fuzz
 import ollama
-import ai_integration
+import ai
 
 
 @deal.post(lambda x: x >= 0)
@@ -33,14 +33,14 @@ def main():
     # print(square(2))
     # print("Hello from fv-ai-codegen!")
     # fuzz.fuzz(sort_func)
-    # _ = deal.cases(sort_func) can't figure out how to do this
+    # _ = deal.cass(sort_func) can't figure out how to do this
     # resp = queryModel("Why is the sky blue?")
     # print(resp)
     # resp = queryModel("What was the previous message?")
     # print(resp)
 
-    ai_1 = ai_integration.OllamaThread()
-    ai_2 = ai_integration.OllamaThread()
+    ai_1 = ai.OllamaThread()
+    ai_2 = ai.OllamaThread()
     while (True):
         txt = input("1:>>> ")
         print(ai_1.query(txt, 100))
