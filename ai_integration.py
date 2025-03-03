@@ -20,8 +20,6 @@ class OllamaThread:
         self.valid_context = True
         self.responses = []
 
-        # claiming a need for a lock, but I don't believe it
-
     # implementing streaming part myself
     def query(self, msg: str, max_tokens: int) -> str:
         self.full_conversation += " " + msg
