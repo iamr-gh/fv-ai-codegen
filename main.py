@@ -1,51 +1,53 @@
-import deal
-import fuzz
-import ollama
-import ai
-
-
-@deal.post(lambda x: x >= 0)
-@deal.pure
-def square(x: int) -> int:
-    return x * x
-
-
-@deal.post(lambda result: all(result[i] <= result[i + 1] for i in range(len(result) - 1)))
-@deal.ensure(lambda x, result: result == sorted(x))
-def sort_func(x: list[int]) -> list[int]:
-    # bubble sort
-    change = True
-    while (change):
-        change = False
-        for i in range(len(x) - 2):
-            if x[i] > x[i + 1]:
-                x[i], x[i + 1] = x[i + 1], x[i]
-                change = True
-    return x
-
-
-def queryModel(msg: str) -> str:
-    return ollama.chat(model="llama3.1", messages=[{'role': 'user', 'content': msg}])
+import sys
+import subprocess
+import utils
 
 
 def main():
-    # print(sort_func([1, 3, 2]))
-    # print(square(2))
-    # print("Hello from fv-ai-codegen!")
-    # fuzz.fuzz(sort_func)
-    # _ = deal.cass(sort_func) can't figure out how to do this
-    # resp = queryModel("Why is the sky blue?")
-    # print(resp)
-    # resp = queryModel("What was the previous message?")
-    # print(resp)
+    # eventually may parameterize more
+    template_fname = sys.argv[1]
+    max_tok = 100
+    split_fname = template_fname.split(".")
+    assert split_fname[-1] == "py"
 
-    ai_1 = ai.OllamaThread()
-    ai_2 = ai.OllamaThread()
-    while (True):
-        txt = input("1:>>> ")
-        print(ai_1.query(txt, 100))
-        txt = input("2:>>> ")
-        print(ai_2.query(txt, 100))
+    # may abstract sentinel later
+
+    # swap for different kinds of file extensions
+    gen_driver_cmd = ["uv", "run", "gen_driver.py", template_fname]
+    # gen_driver_cmd = ["ls"]
+    gen_driver = subprocess.Popen(
+        gen_driver_cmd,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True
+    )
+
+    # ai_driver_cmd = ["uv", "run", "ai_driver.py", max_tok, ">>>"]
+    # ai_driver = subprocess.Popen(
+    #     ai_driver_cmd,
+    #     stdin=subprocess.PIPE,
+    #     stdout=subprocess.PIPE,
+    #     stderr=subprocess.PIPE,
+    #     text=True
+    # )
+
+    ai_output = " "
+    gen_err = ""
+    while True:
+        return_code = gen_driver.poll()
+        if return_code is not None:
+            print(return_code)
+            print(gen_err)
+            break
+
+        gen_output, gen_err = gen_driver.communicate(input=ai_output)
+        print(f"{utils.bcolors.OKBLUE}{gen_output}{utils.bcolors.ENDC}")
+        # ai_output, ai_err = ai_driver.communicate(input=gen_output)
+        # print(f"{utils.bcolors.OKGREEN}{ai_output}{utils.bcolors.ENDC}")
+
+    # ai_driver.kill()
+    print("Done")
 
 
 if __name__ == "__main__":
